@@ -1,0 +1,14 @@
+#main{
+    margin: 20% auto;
+    width: 600px;
+    height: 400px;
+    background-color: #ddd;
+}
+
+.axisText{
+    font-size: 1.2em;
+}
+
+.title{
+    font-size: 1.5em;
+}
