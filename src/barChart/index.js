@@ -5,97 +5,95 @@ d3.csv('./data.csv', function(d){
     ];
 }).then(function(data){
 
-    /*
-        定义图表大小及颜色
-    */
-    const w = 400,
-          h = 300,
-          color = 'rgb(194,53,49)',
-          textColor = 'black';
+    /* 配置参数 */
+    const chart = new Chart();
+    const config = {
+        barPadding: 0.15,
+        barColor: chart._colors(0),
+        margins: {top: 50, left: 80, bottom: 50, right: 80},
+        textColor: 'black'
+    }
 
-    d3.select("#main")
-        .append("svg")
-        .attr("width", 600)
-        .attr("height", 400);
-
-    var g = d3.select("svg")
-        .append("g")
-        .attr('transform', 'translate(100,50)')
-        .attr('fill', textColor);
+    chart.margins(config.margins);
     
-    /*
-        尺度转换函数
-    */
-
-    var yScale = d3.scaleLinear()
-                    .domain([0, d3.max(data, (item) => item[1])])
-                    .range([h, 0]);
-
-    var xScale = d3.scaleBand()
-                    .domain(data.map(item => item[0]))
-                    .range([0, w])
-                    .padding(0.1);
-
-    /*
-        坐标轴函数
-    */
-
-    var xAxis = d3.axisBottom(xScale);
-
-    var yAxis = d3.axisLeft(yScale);
-
-    /*
-        添加柱子
-    */
-
-    g.selectAll("rect")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("x", function(item){
-            return xScale(item[0]);
-        })
-        .attr("width", xScale.bandwidth())
-        .attr("height", function(item, i){
-            return yScale(0) - yScale(item[1]);
-        })
-        .attr("y", function(item){
-            return yScale(item[1]);
-        })
-        .attr('fill', color);
+    /* 尺度转换 */
+    chart.scaleX = d3.scaleBand()
+                    .domain(data.map((d) => d[0]))
+                    .range([0, chart.getBodyWidth()])
+                    .padding(config.barPadding);
     
-    /*
-        添加坐标轴和文本标签
-    */
+    chart.scaleY = d3.scaleLinear()
+                    .domain([0, d3.max(data, (d) => d[1])])
+                    .range([chart.getBodyHeight(), 0])
+    
+    /* 渲染柱形 */
+    chart.renderBars = function(){
+        chart.body().selectAll('.bar')
+                    .data(data)
+                    .enter()
+                    .append('rect')
+                    .attr('class','bar')
+                    .attr('x', (d) => chart.scaleX(d[0]))
+                    .attr('y', (d) => chart.scaleY(d[1]))
+                    .attr('width', chart.scaleX.bandwidth())
+                    .attr('height', (d) => chart.getBodyHeight() - chart.scaleY(d[1]))
+                    .attr('fill', config.barColor);
+    }
 
-    g.append("g")
-        .attr('transform', 'translate(0,' + yScale(0) + ')')
-        .call(xAxis)
-        .append("text")
-        .text("日期")
-        .attr("stroke", textColor)
-        .attr("class", "axisText")
-        .attr("x", w)
-        .attr("dy","2em")
+    /* 渲染坐标轴 */
+    chart.renderX = function(){
+        chart.svg().append('g')
+                .attr('transform', 'translate(' + chart.bodyX() + ',' + (chart.bodyY() + chart.getBodyHeight()) + ')')
+                .attr('class', 'xAxis')
+                .call(d3.axisBottom(chart.scaleX));
+    }
 
-    g.append("g")
-        .call(yAxis)
-        .append('text')
-        .text('每日收入（元）')
-        .attr('transform', 'rotate(-90)')
-        .attr("dy","-3em")
-        .attr("stroke", textColor)
-        .attr("class", "axisText");
+    chart.renderY = function(){
+        chart.svg().append('g')
+                .attr('transform', 'translate(' + chart.bodyX() + ',' + chart.bodyY() + ')')
+                .attr('class', 'yAxis')
+                .call(d3.axisLeft(chart.scaleY));
+    }
 
-    g.append("text")
-        .text("直方图")
-        .attr("x", w/2)
-        .attr("dy","-1em")
-        .attr("class", "title")
-        .attr("stroke", textColor)
-        .attr("text-anchor", 'middle');
+    chart.renderAxis = function(){
+        chart.renderX();
+        chart.renderY();
+    }
+
+    /* 渲染文本标签 */
+    chart.renderText = function(){
+        d3.select('.xAxis').append('text')
+                            .attr('class', 'axisText')
+                            .attr('x', chart.getBodyWidth())
+                            .attr('y', 0)
+                            .attr('stroke', config.textColor)
+                            .attr('dy', 30)
+                            .text('日期');
+
+        d3.select('.yAxis').append('text')
+                            .attr('class', 'axisText')
+                            .attr('x', 0)
+                            .attr('y', 0)
+                            .attr('stroke', config.textColor)
+                            .attr('transform', 'rotate(-90)')
+                            .attr('dy', -40)
+                            .attr('text-anchor','end')
+                            .text('每日收入（元）');
+    }
+        
+    chart.render = function(){
+        chart.renderBars();
+
+        chart.renderAxis();
+
+        chart.renderText();
+    }
+
+    chart.renderChart();
+    
         
 });
+
 
 
 

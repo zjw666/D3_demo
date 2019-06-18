@@ -1,4 +1,4 @@
-#main{
+.box{
     margin: 20% auto;
     width: 600px;
     height: 400px;
@@ -6,9 +6,5 @@
 }
 
 .axisText{
-    font-size: 1.2em;
-}
-
-.title{
-    font-size: 1.5em;
+    font-size: 15px;
 }
