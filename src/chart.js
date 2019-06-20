@@ -1,4 +1,4 @@
-class Chart {
+export default class Chart {
     constructor(){
         this._width = 600;
         this._height = 400;
@@ -103,9 +103,9 @@ class Chart {
     renderBody(){
         if (!this._body){
             this._body = this._svg.append('g')
-                                    .attr('class', 'body')
-                                    .attr('transform', 'translate(' + this.bodyX() + ',' + this.bodyY() + ')')
-                                    .attr('clip-path', "url(#clip)");
+                            .attr('class', 'body')
+                            .attr('transform', 'translate(' + this.bodyX() + ',' + this.bodyY() + ')')
+                            .attr('clip-path', "url(#clip)");
         }
 
         this.render();
@@ -120,8 +120,8 @@ class Chart {
 
         if (!this._svg){
             this._svg = this._box.append('svg')
-                                    .attr('width', this._width)
-                                    .attr('height', this._height);
+                            .attr('width', this._width)
+                            .attr('height', this._height);
         }
 
         this.defineBodyClip();
@@ -129,5 +129,5 @@ class Chart {
         this.renderBody();
     }
 
-
 }
+

@@ -2,54 +2,52 @@ import Chart from "../chart.js";
 
 d3.csv('./data.csv', function(d){
     return [
-        d.date,
-        +d.money
+        +d.x,
+        +d.y
     ];
 }).then(function(data){
 
     /* 配置参数 */
     const chart = new Chart();
     const config = {
-        barPadding: 0.15,
-        barColor: chart._colors(0),
+        pointColor: chart._colors(0),
         margins: {top: 80, left: 80, bottom: 50, right: 80},
         textColor: 'black',
         gridColor: 'gray',
-        tickShowGrid: [60, 120, 180],
-        title: '直方图'
+        ShowGridX: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
+        ShowGridY: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
+        title: '散点图',
+        pointSize: 5
     }
 
     chart.margins(config.margins);
     
     /* 尺度转换 */
-    chart.scaleX = d3.scaleBand()
-                    .domain(data.map((d) => d[0]))
+    chart.scaleX = d3.scaleLinear()
+                    .domain([0, Math.ceil(d3.max(data, (d) => d[0])/10)*10])
                     .range([0, chart.getBodyWidth()])
-                    .padding(config.barPadding);
     
     chart.scaleY = d3.scaleLinear()
-                    .domain([0, d3.max(data, (d) => d[1])])
+                    .domain([0, Math.ceil(d3.max(data, (d) => d[1])/10)*10])
                     .range([chart.getBodyHeight(), 0])
     
-    /* 渲染柱形 */
-    chart.renderBars = function(){
-        let bars = chart.body().selectAll('.bar')
+    /* 渲染数据点 */
+    chart.renderPoints = function(){
+        let points = chart.body().selectAll('.point')
                     .data(data);
 
-            bars.enter()
-                    .append('rect')
-                    .attr('class','bar')
-                .merge(bars)
-                    .attr('x', (d) => chart.scaleX(d[0]))
-                    .attr('y', chart.scaleY(0))
-                    .attr('width', chart.scaleX.bandwidth())
-                    .attr('height', 0)
-                    .attr('fill', config.barColor)
+            points.enter()
+                    .append('circle')
+                    .classed('point', true)
+                .merge(points)
+                    .attr('cx', (d) => chart.scaleX(d[0]))
+                    .attr('cy', (d) => chart.scaleY(d[1]))
+                    .attr('r', 0)
+                    .attr('fill', config.pointColor)
                     .transition().duration(500)
-                    .attr('height', (d) => chart.getBodyHeight() - chart.scaleY(d[1]))
-                    .attr('y', (d) => chart.scaleY(d[1]));
+                    .attr('r', config.pointSize)
             
-            bars.exit()
+            points.exit()
                     .remove();
     }
 
@@ -81,24 +79,23 @@ d3.csv('./data.csv', function(d){
                             .attr('y', 0)
                             .attr('fill', config.textColor)
                             .attr('dy', 30)
-                            .text('日期');
+                            .text('X');
 
         d3.select('.yAxis').append('text')
                             .attr('class', 'axisText')
                             .attr('x', 0)
                             .attr('y', 0)
                             .attr('fill', config.textColor)
-                            .attr('transform', 'rotate(-90)')
-                            .attr('dy', -40)
-                            .attr('text-anchor','end')
-                            .text('每日收入（元）');
+                            .attr('dx', '-30')
+                            .attr('dy', '10')
+                            .text('Y');
     }
 
     /* 渲染网格线 */
     chart.renderGrid = function(){
         d3.selectAll('.yAxis .tick')
             .each(function(d, i){
-                if (config.tickShowGrid.indexOf(d) > -1){
+                if (config.ShowGridY.indexOf(d) > -1){
                     d3.select(this).append('line')
                         .attr('class','grid')
                         .attr('stroke', config.gridColor)
@@ -106,6 +103,19 @@ d3.csv('./data.csv', function(d){
                         .attr('y1', 0)
                         .attr('x2', chart.getBodyWidth())
                         .attr('y2', 0);
+                }
+            });
+
+        d3.selectAll('.xAxis .tick')
+            .each(function(d, i){
+                if (config.ShowGridX.indexOf(d) > -1){
+                    d3.select(this).append('line')
+                        .attr('class','grid')
+                        .attr('stroke', config.gridColor)
+                        .attr('x1', 0)
+                        .attr('y1', 0)
+                        .attr('x2', 0)
+                        .attr('y2', -chart.getBodyHeight());
                 }
             });
     }
@@ -140,10 +150,11 @@ d3.csv('./data.csv', function(d){
             }
         }
 
-        d3.selectAll('.bar')
+        d3.selectAll('.point')
             .on('mouseover', function(d){
                 const e = d3.event;
                 const position = d3.mouse(chart.svg().node());
+                e.target.style.cursor = 'hand'
 
                 d3.select(e.target)
                     .attr('fill', chart._colors(1));
@@ -154,7 +165,7 @@ d3.csv('./data.csv', function(d){
                     .attr('x', position[0]+5)
                     .attr('y', position[1])
                     .attr('fill', config.textColor)
-                    .text('收入:' + d[1] + '元');
+                    .text('x: ' + d[0] + ', y: ' + d[1]);
             })
             .on('mouseleave', function(){
                 const e = d3.event;
@@ -181,7 +192,7 @@ d3.csv('./data.csv', function(d){
 
         chart.renderGrid();
 
-        chart.renderBars();
+        chart.renderPoints();
 
         chart.addMouseOn();
 
