@@ -8,3 +8,6 @@
 
 ## 折线图 (lineChart)
 ![折线图](./pic/lineChart.png)
+
+## 饼图 (pieChart)
+![饼图](./pic/pieChart.png)
