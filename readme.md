@@ -4,4 +4,7 @@
 ![直方图](./pic/barChart.png)
 
 ## 散点图 (scatterChart)
-![直方图](./pic/scatterChart.png)
+![散点图](./pic/scatterChart.png)
+
+## 折线图 (lineChart)
+![折线图](./pic/lineChart.png)

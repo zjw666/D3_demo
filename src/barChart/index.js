@@ -168,7 +168,7 @@ d3.csv('./data.csv', function(d){
                     const position = d3.mouse(chart.svg().node());
                     d3.select('.tip')
                     .attr('x', position[0]+5)
-                    .attr('y', position[1]);
+                    .attr('y', position[1]-5);
                 }, 6)
             );
     }

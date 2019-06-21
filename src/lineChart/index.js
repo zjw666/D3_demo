@@ -2,53 +2,113 @@ import Chart from "../chart.js";
 
 d3.csv('./data.csv', function(d){
     return [
-        +d.x,
-        +d.y
+        d.date,
+        +d.money
     ];
 }).then(function(data){
-
     /* 配置参数 */
     const chart = new Chart();
     const config = {
-        pointColor: chart._colors(0),
+        lineColor: chart._colors(0),
         margins: {top: 80, left: 80, bottom: 50, right: 80},
         textColor: 'black',
         gridColor: 'gray',
-        ShowGridX: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
-        ShowGridY: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
-        title: '散点图',
-        pointSize: 5
+        ShowGridX: [],
+        ShowGridY: [20, 40, 60, 80, 100, 120, 140, 160 ,180, 200, 220],
+        title: '折线图',
+        pointSize: 5,
+        pointColor: 'white'
     }
 
     chart.margins(config.margins);
     
     /* 尺度转换 */
-    chart.scaleX = d3.scaleLinear()
-                    .domain([0, Math.ceil(d3.max(data, (d) => d[0])/10)*10])
+    chart.scaleX = d3.scaleBand()
+                    .domain(data.map((d) => d[0]))
                     .range([0, chart.getBodyWidth()])
     
     chart.scaleY = d3.scaleLinear()
-                    .domain([0, Math.ceil(d3.max(data, (d) => d[1])/10)*10])
+                    .domain([0, (Math.floor(d3.max(data, (d) => d[1])/10) + 1)*10])
                     .range([chart.getBodyHeight(), 0])
     
-    /* 渲染数据点 */
-    chart.renderPoints = function(){
-        let points = chart.body().selectAll('.point')
-                    .data(data);
+    /* 渲染线条 */
+    chart.renderLines = function(){
 
-            points.enter()
+        let lines = chart.body().selectAll('.line')
+                    .data([data]);
+
+            lines.enter()
+                    .append('path')
+                    .classed('line', true)
+                .merge(lines)
+                    .attr('fill', 'none')
+                    .attr('stroke', config.lineColor)
+                    .attr('transform', 'translate(' + chart.scaleX.bandwidth()/2 +',0)')
+                    .transition().duration(2000)
+                    .attrTween('d', lineTween);
+            
+            lines.exit()
+                    .remove();
+
+            lineTween();
+            
+            //中间帧函数
+            function lineTween(){
+                const generateLine = d3.line()
+                                        .x((d) => d[0])
+                                        .y((d) => d[1]);
+
+                const pointX = data.map((d) => chart.scaleX(d[0]));
+                const pointY = data.map((d) => chart.scaleY(d[1]));
+
+                const interpolate = getInterpolate(pointX, pointY);                
+                
+                const ponits = []
+
+                return function(t){
+                    ponits.push([interpolate.x(t), interpolate.y(t)]);
+                    return generateLine(ponits);
+                }
+            }
+
+            //点插值
+            function getInterpolate(pointX, pointY){
+
+                const domain = d3.range(0, 1, 1/(pointX.length-1));
+                domain.push(1);
+
+                const interpolateX = d3.scaleLinear()
+                                        .domain(domain)
+                                        .range(pointX);
+
+                const interpolateY = d3.scaleLinear()
+                                        .domain(domain)
+                                        .range(pointY);
+                return {
+                    x: interpolateX,
+                    y: interpolateY
+                };
+
+            }
+    }
+
+    /* 渲染点 */
+    chart.renderPonits = function(){
+        let ponits = chart.body().selectAll('.point')
+                    .data(data);
+            
+            ponits.enter()
                     .append('circle')
                     .classed('point', true)
-                .merge(points)
+                .merge(ponits)
                     .attr('cx', (d) => chart.scaleX(d[0]))
                     .attr('cy', (d) => chart.scaleY(d[1]))
                     .attr('r', 0)
                     .attr('fill', config.pointColor)
+                    .attr('stroke', config.lineColor)
+                    .attr('transform', 'translate(' + chart.scaleX.bandwidth()/2 +',0)')
                     .transition().duration(500)
-                    .attr('r', config.pointSize)
-            
-            points.exit()
-                    .remove();
+                    .attr('r', config.pointSize);
     }
 
     /* 渲染坐标轴 */
@@ -79,16 +139,17 @@ d3.csv('./data.csv', function(d){
                             .attr('y', 0)
                             .attr('fill', config.textColor)
                             .attr('dy', 30)
-                            .text('X');
+                            .text('日期');
 
         d3.select('.yAxis').append('text')
                             .attr('class', 'axisText')
                             .attr('x', 0)
                             .attr('y', 0)
                             .attr('fill', config.textColor)
-                            .attr('dx', '-30')
-                            .attr('dy', '10')
-                            .text('Y');
+                            .attr('transform', 'rotate(-90)')
+                            .attr('dy', -40)
+                            .attr('text-anchor','end')
+                            .text('每日收入（元）');
     }
 
     /* 渲染网格线 */
@@ -165,13 +226,13 @@ d3.csv('./data.csv', function(d){
                     .attr('x', position[0]+5)
                     .attr('y', position[1])
                     .attr('fill', config.textColor)
-                    .text('x: ' + d[0] + ', y: ' + d[1]);
+                    .text('收入：' + d[1]);
             })
             .on('mouseleave', function(){
                 const e = d3.event;
                 
                 d3.select(e.target)
-                    .attr('fill', chart._colors(0));
+                    .attr('fill', config.pointColor);
                     
                 d3.select('.tip').remove();
             })
@@ -192,11 +253,13 @@ d3.csv('./data.csv', function(d){
 
         chart.renderGrid();
 
-        chart.renderPoints();
+        chart.renderLines();
 
-        chart.addMouseOn();
+        chart.renderPonits();
 
         chart.renderTitle();
+
+        chart.addMouseOn();
     }
 
     chart.renderChart();
