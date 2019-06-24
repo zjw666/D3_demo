@@ -77,13 +77,15 @@ export default class Chart {
     }
 
     defineBodyClip(){
+        const padding = 10;
+
         this._svg.append('defs')
                  .append('clipPath')
                  .attr('id', 'clip')
                  .append('rect')
-                 .attr('width', this.getBodyWidth())
+                 .attr('width', this.getBodyWidth() + padding * 2)
                  .attr('height', this.getBodyHeight())
-                 .attr('x', 0)
+                 .attr('x', -padding)
                  .attr('y', 0);
     }
 
