@@ -11,8 +11,8 @@ d3.csv('./data.csv', function(d){
     const config = {
         margins: {top: 80, left: 80, bottom: 50, right: 80},
         textColor: 'black',
-        title: '饼图',
-        innerRadius: 0,
+        title: '环状饼图',
+        innerRadius: 60,
         outerRadius: 100,
         textOffsetH: 10,
         lineColor: 'black',
@@ -68,10 +68,10 @@ d3.csv('./data.csv', function(d){
     /* ----------------------------渲染文本标签和线条------------------------  */
     chart.renderText = function(){
 
-        // ----渲染文本标签-----
+        // ----渲染文本标签-------
         const arc = d3.arc()
-                        .outerRadius(config.outerRadius * 2.5)
-                        .innerRadius(config.innerRadius);
+                        .outerRadius(config.outerRadius + (config.outerRadius-config.innerRadius)*1.2)
+                        .innerRadius(config.innerRadius + (config.outerRadius-config.innerRadius)*1.2);
 
         const scaleTextDx = d3.scaleLinear()
                                 .domain([0, Math.PI/2])
@@ -101,10 +101,10 @@ d3.csv('./data.csv', function(d){
                 labels.exit()
                         .remove();
 
-        // ----渲染标签连线-----
+        // ----渲染标签连线------
         const arc1 = d3.arc()
-                        .outerRadius(config.outerRadius * 2)
-                        .innerRadius(config.innerRadius);
+                        .outerRadius(config.outerRadius + (config.outerRadius-config.innerRadius)/2)
+                        .innerRadius(config.innerRadius + (config.outerRadius-config.innerRadius)/2);
         
         const points = getLinePoints();
 

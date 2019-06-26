@@ -9,7 +9,7 @@ d3.csv('./data.csv', function(d){
     };
 }).then(function(data){
 
-    /* 配置参数 */
+    /* ----------------------------配置参数------------------------  */
     const chart = new Chart();
     const config = {
         barPadding: 0.15,
@@ -17,12 +17,14 @@ d3.csv('./data.csv', function(d){
         textColor: 'black',
         gridColor: 'gray',
         tickShowGrid: [60, 120, 180],
-        title: '堆叠直方图'
+        title: '堆叠直方图',
+        hoverColor: 'white',
+        animateDuration: 1000
     }
 
     chart.margins(config.margins);
     
-    /* 尺度转换 */
+    /* ----------------------------尺度转换------------------------  */
     chart.scaleX = d3.scaleBand()
                     .domain(data.map((d) => d.date))
                     .range([0, chart.getBodyWidth()])
@@ -37,7 +39,7 @@ d3.csv('./data.csv', function(d){
                     .order(d3.stackOrderAscending)
                     .offset(d3.stackOffsetNone);
     
-    /* 渲染柱形 */
+    /* ----------------------------渲染柱形------------------------  */
     chart.renderBars = function(){
 
         let groups = chart.body().selectAll('.g')
@@ -68,7 +70,7 @@ d3.csv('./data.csv', function(d){
                     .attr('y', (d) => chart.scaleY(d[0]))
                     .attr('width', chart.scaleX.bandwidth())
                     .attr('height', 0)
-                    .transition().duration(500)
+                    .transition().duration(config.animateDuration)
                     .attr('height', (d) => chart.scaleY(d[0]) - chart.scaleY(d[1]))
                     .attr('y', (d) => chart.scaleY(d[1]));
             
@@ -76,7 +78,7 @@ d3.csv('./data.csv', function(d){
                     .remove();
     }
 
-    /* 渲染坐标轴 */
+    /* ----------------------------渲染坐标轴------------------------  */
     chart.renderX = function(){
         chart.svg().insert('g','.body')
                 .attr('transform', 'translate(' + chart.bodyX() + ',' + (chart.bodyY() + chart.getBodyHeight()) + ')')
@@ -96,7 +98,7 @@ d3.csv('./data.csv', function(d){
         chart.renderY();
     }
 
-    /* 渲染文本标签 */
+    /* ----------------------------渲染文本标签------------------------  */
     chart.renderText = function(){
         d3.select('.xAxis').append('text')
                             .attr('class', 'axisText')
@@ -117,7 +119,7 @@ d3.csv('./data.csv', function(d){
                             .text('每日支出（元）');
     }
 
-    /* 渲染网格线 */
+    /* ----------------------------渲染网格线------------------------  */
     chart.renderGrid = function(){
         d3.selectAll('.yAxis .tick')
             .each(function(d, i){
@@ -133,7 +135,7 @@ d3.csv('./data.csv', function(d){
             });
     }
 
-    /* 渲染标题 */
+    /* ----------------------------渲染图标题------------------------  */
     chart.renderTitle = function(){
         chart.svg().append('text')
                 .classed('title', true)
@@ -147,7 +149,7 @@ d3.csv('./data.csv', function(d){
 
     }
 
-    /* 绑定鼠标交互事件 */
+    /* ----------------------------绑定鼠标交互事件------------------------  */
     chart.addMouseOn = function(){
         //防抖函数
         function debounce(fn, time){
@@ -169,7 +171,7 @@ d3.csv('./data.csv', function(d){
                 const position = d3.mouse(chart.svg().node());
 
                 d3.select(e.target)
-                    .attr('fill', 'white');
+                    .attr('fill', config.hoverColor);
                 
                 chart.svg()
                     .append('text')

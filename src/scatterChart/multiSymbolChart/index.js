@@ -2,115 +2,105 @@ import Chart from "../../chart.js";
 
 d3.csv('./data.csv', function(d){
     return {
-        date: d.date,
-        money: +d.money
+        x: +d.x,
+        y: +d.y,
+        x1: +d.x1,
+        y1: +d.y1,
+        x2: +d.x2,
+        y2: +d.y2,
+        x3: +d.x3,
+        y3: +d.y3,
     };
 }).then(function(data){
+
     /* ----------------------------配置参数------------------------  */
     const chart = new Chart();
     const config = {
-        lineColor: chart._colors(0),
         margins: {top: 80, left: 80, bottom: 50, right: 80},
         textColor: 'black',
         gridColor: 'gray',
-        ShowGridX: [],
-        ShowGridY: [20, 40, 60, 80, 100, 120, 140, 160 ,180, 200, 220],
-        title: '折线图',
-        pointSize: 5,
-        pointColor: 'white',
-        hoverColor: 'red',
+        ShowGridX: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
+        ShowGridY: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
+        title: '多符号散点图',
+        pointSize: 100,
+        hoverColor: 'white',
         animateDuration: 1000
     }
 
     chart.margins(config.margins);
     
     /* ----------------------------尺度转换------------------------  */
-    chart.scaleX = d3.scaleBand()
-                    .domain(data.map((d) => d.date))
-                    .range([0, chart.getBodyWidth()])
+    chart.scaleX = d3.scaleLinear()
+                    .domain([0, Math.ceil(d3.max(data, (d) => getMaxNum(d,'x'))/10)*10])
+                    .range([0, chart.getBodyWidth()]);
     
     chart.scaleY = d3.scaleLinear()
-                    .domain([0, (Math.floor(d3.max(data, (d) => d.money)/10) + 1)*10])
-                    .range([chart.getBodyHeight(), 0])
+                    .domain([0, Math.ceil(d3.max(data, (d) => getMaxNum(d,'y'))/10)*10])
+                    .range([chart.getBodyHeight(), 0]);
     
-    /* ----------------------------渲染线条------------------------  */
-    chart.renderLines = function(){
+    //获取数据行最大x值或y值
+    function getMaxNum(d, type){
+        const nums = [];
+        Object.keys(d).forEach((key) => {
+            if (key.indexOf(type) > -1) nums.push(d[key]);
+        })
+        return d3.max(nums);
+    }
+    
+    /* ----------------------------渲染数据点------------------------  */
+    chart.renderPoints = function(){
+        /*
+            改变数据结构，方便渲染
+            [
+                [[x,y],[x,y],...],
+                [[x1,y1],[x1,y1],...],
+                [[x2,y2],[x2,y2],...],
+                [[x3,y3],[x3,y3],...],
+            ]
+        */
+        const tempData = data.map((d) => {
+            const items = [];
+            d3.permute(d, Object.keys(d)).forEach((item,i,array) => {
+                if (i % 2 === 0){
+                    items.push([array[i],array[i+1],i/2]);
+                }
+            });
+            return items;
+        });
 
-        let lines = chart.body().selectAll('.line')
-                    .data([data]);
+        const multiData = d3.zip.apply(this,tempData);
 
-            lines.enter()
-                    .append('path')
-                    .classed('line', true)
-                .merge(lines)
-                    .attr('fill', 'none')
-                    .attr('stroke', config.lineColor)
-                    .attr('transform', 'translate(' + chart.scaleX.bandwidth()/2 +',0)')
-                    .transition().duration(config.animateDuration)
-                    .attrTween('d', lineTween);
+        let groups = chart.body().selectAll('.g')
+                        .data(multiData);
+
+        let points = groups.enter()
+                              .append('g')
+                           .merge(groups)
+                              .attr('class', (d,i) => 'g points-' + i)
+                              .attr('fill', (d,i) => chart._colors(i))
+                              .selectAll('.point')
+                              .data((d) => d);
             
-            lines.exit()
+            groups.exit()
                     .remove();
 
-            lineTween();
-            
-            //中间帧函数
-            function lineTween(){
-                const generateLine = d3.line()
-                                        .x((d) => d[0])
-                                        .y((d) => d[1]);
-
-                const pointX = data.map((d) => chart.scaleX(d.date));
-                const pointY = data.map((d) => chart.scaleY(d.money));
-
-                const interpolate = getInterpolate(pointX, pointY);                
-                
-                const ponits = []
-
-                return function(t){
-                    ponits.push([interpolate.x(t), interpolate.y(t)]);
-                    return generateLine(ponits);
-                }
-            }
-
-            //点插值
-            function getInterpolate(pointX, pointY){
-
-                const domain = d3.range(0, 1, 1/(pointX.length-1));
-                domain.push(1);
-
-                const interpolateX = d3.scaleLinear()
-                                        .domain(domain)
-                                        .range(pointX);
-
-                const interpolateY = d3.scaleLinear()
-                                        .domain(domain)
-                                        .range(pointY);
-                return {
-                    x: interpolateX,
-                    y: interpolateY
-                };
-
-            }
-    }
-
-    /* ----------------------------渲染点------------------------  */
-    chart.renderPonits = function(){
-        let ponits = chart.body().selectAll('.point')
-                    .data(data);
-            
-            ponits.enter()
-                    .append('circle')
+            points.enter()
+                    .append('path')
                     .classed('point', true)
-                .merge(ponits)
-                    .attr('cx', (d) => chart.scaleX(d.date))
-                    .attr('cy', (d) => chart.scaleY(d.money))
-                    .attr('r', 0)
-                    .attr('fill', config.pointColor)
-                    .attr('stroke', config.lineColor)
-                    .attr('transform', 'translate(' + chart.scaleX.bandwidth()/2 +',0)')
+                  .merge(points)
+                    .attr('transform', (d) => 'translate(' + chart.scaleX(d[0]) + ',' + chart.scaleY(d[1]) + ')')
+                    .attr('d', d3.symbol().type(function (d) {
+                        return d3.symbols[d[2]];
+                    }).size(1))
                     .transition().duration(config.animateDuration)
-                    .attr('r', config.pointSize);
+                    .attr('d', d3.symbol().type(function (d) {
+                        return d3.symbols[d[2]];
+                    }).size(config.pointSize));
+                    
+            
+            points.exit()
+                    .remove();
+            
     }
 
     /* ----------------------------渲染坐标轴------------------------  */
@@ -141,17 +131,16 @@ d3.csv('./data.csv', function(d){
                             .attr('y', 0)
                             .attr('fill', config.textColor)
                             .attr('dy', 30)
-                            .text('日期');
+                            .text('X');
 
         d3.select('.yAxis').append('text')
                             .attr('class', 'axisText')
                             .attr('x', 0)
                             .attr('y', 0)
                             .attr('fill', config.textColor)
-                            .attr('transform', 'rotate(-90)')
-                            .attr('dy', -40)
-                            .attr('text-anchor','end')
-                            .text('每日收入（元）');
+                            .attr('dx', '-30')
+                            .attr('dy', '10')
+                            .text('Y');
     }
 
     /* ----------------------------渲染网格线------------------------  */
@@ -220,7 +209,7 @@ d3.csv('./data.csv', function(d){
                 e.target.style.cursor = 'hand'
 
                 d3.select(e.target)
-                    .attr('fill', chart.hoverColor);
+                    .attr('fill', config.hoverColor);
                 
                 chart.svg()
                     .append('text')
@@ -228,13 +217,13 @@ d3.csv('./data.csv', function(d){
                     .attr('x', position[0]+5)
                     .attr('y', position[1])
                     .attr('fill', config.textColor)
-                    .text('收入：' + d.money);
+                    .text('x: ' + d[0] + ', y: ' + d[1]);
             })
-            .on('mouseleave', function(){
+            .on('mouseleave', function(d){
                 const e = d3.event;
                 
                 d3.select(e.target)
-                    .attr('fill', config.pointColor);
+                    .attr('fill', chart._colors(d[2]));
                     
                 d3.select('.tip').remove();
             })
@@ -255,13 +244,11 @@ d3.csv('./data.csv', function(d){
 
         chart.renderGrid();
 
-        chart.renderLines();
-
-        chart.renderPonits();
-
-        chart.renderTitle();
+        chart.renderPoints();
 
         chart.addMouseOn();
+
+        chart.renderTitle();
     }
 
     chart.renderChart();

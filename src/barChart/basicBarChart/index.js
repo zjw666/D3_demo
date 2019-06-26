@@ -1,13 +1,13 @@
 import Chart from "../../chart.js";
 
 d3.csv('./data.csv', function(d){
-    return [
-        d.date,
-        +d.money
-    ];
+    return {
+        date: d.date,
+        money: +d.money
+    };
 }).then(function(data){
 
-    /* 配置参数 */
+    /* ----------------------------配置参数------------------------  */
     const chart = new Chart();
     const config = {
         barPadding: 0.15,
@@ -16,22 +16,24 @@ d3.csv('./data.csv', function(d){
         textColor: 'black',
         gridColor: 'gray',
         tickShowGrid: [60, 120, 180],
-        title: '直方图'
+        title: '直方图',
+        hoverColor: 'white',
+        animateDuration: 1000
     }
 
     chart.margins(config.margins);
     
-    /* 尺度转换 */
+    /* ----------------------------尺度转换------------------------  */
     chart.scaleX = d3.scaleBand()
-                    .domain(data.map((d) => d[0]))
+                    .domain(data.map((d) => d.date))
                     .range([0, chart.getBodyWidth()])
                     .padding(config.barPadding);
     
     chart.scaleY = d3.scaleLinear()
-                    .domain([0, d3.max(data, (d) => d[1])])
+                    .domain([0, d3.max(data, (d) => d.money)])
                     .range([chart.getBodyHeight(), 0])
     
-    /* 渲染柱形 */
+    /* ----------------------------渲染柱形------------------------  */
     chart.renderBars = function(){
         let bars = chart.body().selectAll('.bar')
                     .data(data);
@@ -40,20 +42,20 @@ d3.csv('./data.csv', function(d){
                     .append('rect')
                     .attr('class','bar')
                 .merge(bars)
-                    .attr('x', (d) => chart.scaleX(d[0]))
+                    .attr('x', (d) => chart.scaleX(d.date))
                     .attr('y', chart.scaleY(0))
                     .attr('width', chart.scaleX.bandwidth())
                     .attr('height', 0)
                     .attr('fill', config.barColor)
-                    .transition().duration(500)
-                    .attr('height', (d) => chart.getBodyHeight() - chart.scaleY(d[1]))
-                    .attr('y', (d) => chart.scaleY(d[1]));
+                    .transition().duration(config.animateDuration)
+                    .attr('height', (d) => chart.getBodyHeight() - chart.scaleY(d.money))
+                    .attr('y', (d) => chart.scaleY(d.money));
             
             bars.exit()
                     .remove();
     }
 
-    /* 渲染坐标轴 */
+    /* ----------------------------渲染坐标轴------------------------  */
     chart.renderX = function(){
         chart.svg().insert('g','.body')
                 .attr('transform', 'translate(' + chart.bodyX() + ',' + (chart.bodyY() + chart.getBodyHeight()) + ')')
@@ -73,7 +75,7 @@ d3.csv('./data.csv', function(d){
         chart.renderY();
     }
 
-    /* 渲染文本标签 */
+    /* ----------------------------渲染文本标签------------------------  */
     chart.renderText = function(){
         d3.select('.xAxis').append('text')
                             .attr('class', 'axisText')
@@ -94,7 +96,7 @@ d3.csv('./data.csv', function(d){
                             .text('每日收入（元）');
     }
 
-    /* 渲染网格线 */
+    /* ----------------------------渲染网格线------------------------  */
     chart.renderGrid = function(){
         d3.selectAll('.yAxis .tick')
             .each(function(d, i){
@@ -110,7 +112,7 @@ d3.csv('./data.csv', function(d){
             });
     }
 
-    /* 渲染标题 */
+    /* ----------------------------渲染图标题------------------------  */
     chart.renderTitle = function(){
         chart.svg().append('text')
                 .classed('title', true)
@@ -124,7 +126,7 @@ d3.csv('./data.csv', function(d){
 
     }
 
-    /* 绑定鼠标交互事件 */
+    /* ----------------------------绑定鼠标交互事件------------------------  */
     chart.addMouseOn = function(){
         //防抖函数
         function debounce(fn, time){
@@ -146,7 +148,7 @@ d3.csv('./data.csv', function(d){
                 const position = d3.mouse(chart.svg().node());
 
                 d3.select(e.target)
-                    .attr('fill', chart._colors(1));
+                    .attr('fill', config.hoverColor);
                 
                 chart.svg()
                     .append('text')
@@ -154,7 +156,7 @@ d3.csv('./data.csv', function(d){
                     .attr('x', position[0]+5)
                     .attr('y', position[1])
                     .attr('fill', config.textColor)
-                    .text('收入:' + d[1] + '元');
+                    .text('收入:' + d.money + '元');
             })
             .on('mouseleave', function(){
                 const e = d3.event;

@@ -9,7 +9,7 @@ d3.csv('./data.csv', function(d){
         education: +d.education
     };
 }).then(function(data){
-    /* 配置参数 */
+    /* ----------------------------配置参数------------------------  */
     const chart = new Chart();
     const config = {
         margins: {top: 80, left: 80, bottom: 50, right: 80},
@@ -19,12 +19,14 @@ d3.csv('./data.csv', function(d){
         ShowGridY: [50, 100, 150, 200, 250, 300, 350, 400],
         title: '堆叠面积图',
         pointSize: 5,
-        pointColor: 'white'
+        pointColor: 'white',
+        hoverColor: 'red',
+        animateDuration: 1000
     }
 
     chart.margins(config.margins);
     
-    /* 尺度转换 */
+    /* ----------------------------尺度转换------------------------  */
     chart.scaleX = d3.scalePoint()
                     .domain(data.map((d) => d.date))
                     .range([0, chart.getBodyWidth()])
@@ -39,7 +41,7 @@ d3.csv('./data.csv', function(d){
                     .offset(d3.stackOffsetNone);
 
     
-    /* 渲染线条 */
+    /* ----------------------------渲染线条------------------------  */
     chart.renderLines = function(){
 
         let lines = chart.body().selectAll('.line')
@@ -51,7 +53,7 @@ d3.csv('./data.csv', function(d){
                 .merge(lines)
                     .attr('fill', 'none')
                     .attr('stroke', (d,i) => chart._colors(i))
-                    .transition().duration(2000)
+                    .transition().duration(config.animateDuration)
                     .attrTween('d', lineTween);
             
             lines.exit()
@@ -100,7 +102,7 @@ d3.csv('./data.csv', function(d){
             }
     }
 
-    /* 渲染点 */
+    /* ----------------------------渲染点------------------------  */
     chart.renderPonits = function(){
 
         chart.stack(data).forEach((pointData, i) => {
@@ -116,13 +118,13 @@ d3.csv('./data.csv', function(d){
                     .attr('r', 0)
                     .attr('fill', config.pointColor)
                     .attr('stroke', chart._colors(i))
-                    .transition().duration(500)
+                    .transition().duration(config.animateDuration)
                     .attr('r', config.pointSize)
                     .attr('value', (d) => pointData.key + ':' + d.data[pointData.key]);
         });
     };
 
-    /* 渲染面 */
+    /* ----------------------------渲染面------------------------  */
     chart.renderArea = function(){
         const areas = chart.body().insert('g',':first-child')
                         .selectAll('.area')
@@ -133,7 +135,7 @@ d3.csv('./data.csv', function(d){
                         .attr('class', (d) => 'area area-' + d.key)
                     .merge(areas)
                         .style('fill', (d,i) => chart._colors(i))
-                        .transition().duration(2000)
+                        .transition().duration(config.animateDuration)
                         .attrTween('d', areaTween);
 
         //中间帧函数
@@ -185,7 +187,7 @@ d3.csv('./data.csv', function(d){
 
     }
 
-    /* 渲染坐标轴 */
+    /* ----------------------------渲染坐标轴------------------------  */
     chart.renderX = function(){
         chart.svg().insert('g','.body')
                 .attr('transform', 'translate(' + chart.bodyX() + ',' + (chart.bodyY() + chart.getBodyHeight()) + ')')
@@ -205,7 +207,7 @@ d3.csv('./data.csv', function(d){
         chart.renderY();
     }
 
-    /* 渲染文本标签 */
+    /* ----------------------------渲染文本标签------------------------  */
     chart.renderText = function(){
         d3.select('.xAxis').append('text')
                             .attr('class', 'axisText')
@@ -226,7 +228,7 @@ d3.csv('./data.csv', function(d){
                             .text('每日收入（元）');
     }
 
-    /* 渲染网格线 */
+    /* ----------------------------渲染网格线------------------------  */
     chart.renderGrid = function(){
         d3.selectAll('.yAxis .tick')
             .each(function(d, i){
@@ -255,7 +257,7 @@ d3.csv('./data.csv', function(d){
             });
     }
 
-    /* 渲染标题 */
+    /* ----------------------------渲染图标题------------------------  */
     chart.renderTitle = function(){
         chart.svg().append('text')
                 .classed('title', true)
@@ -269,7 +271,7 @@ d3.csv('./data.csv', function(d){
 
     }
 
-    /* 绑定鼠标交互事件 */
+    /* ----------------------------绑定鼠标交互事件------------------------  */
     chart.addMouseOn = function(){
         //防抖函数
         function debounce(fn, time){
@@ -292,7 +294,7 @@ d3.csv('./data.csv', function(d){
                 e.target.style.cursor = 'hand'
 
                 d3.select(e.target)
-                    .attr('fill', chart._colors(1));
+                    .attr('fill', config.hoverColor);
                 
                 chart.svg()
                     .append('text')

@@ -84,9 +84,9 @@ export default class Chart {
                  .attr('id', 'clip')
                  .append('rect')
                  .attr('width', this.getBodyWidth() + padding * 2)
-                 .attr('height', this.getBodyHeight())
+                 .attr('height', this.getBodyHeight() + padding * 2)
                  .attr('x', -padding)
-                 .attr('y', 0);
+                 .attr('y', -padding);
     }
 
     render(){

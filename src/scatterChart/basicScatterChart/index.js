@@ -1,13 +1,13 @@
 import Chart from "../../chart.js";
 
 d3.csv('./data.csv', function(d){
-    return [
-        +d.x,
-        +d.y
-    ];
+    return {
+        x: +d.x,
+        y: +d.y
+    };
 }).then(function(data){
 
-    /* 配置参数 */
+    /* ----------------------------配置参数------------------------  */
     const chart = new Chart();
     const config = {
         pointColor: chart._colors(0),
@@ -17,21 +17,23 @@ d3.csv('./data.csv', function(d){
         ShowGridX: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
         ShowGridY: [10, 20, 30, 40, 50, 60, 70 ,80, 90, 100],
         title: '散点图',
-        pointSize: 5
+        pointSize: 5,
+        hoverColor: 'white',
+        animateDuration: 1000
     }
 
     chart.margins(config.margins);
     
-    /* 尺度转换 */
+    /* ----------------------------尺度转换------------------------  */
     chart.scaleX = d3.scaleLinear()
-                    .domain([0, Math.ceil(d3.max(data, (d) => d[0])/10)*10])
+                    .domain([0, Math.ceil(d3.max(data, (d) => d.x)/10)*10])
                     .range([0, chart.getBodyWidth()])
     
     chart.scaleY = d3.scaleLinear()
-                    .domain([0, Math.ceil(d3.max(data, (d) => d[1])/10)*10])
+                    .domain([0, Math.ceil(d3.max(data, (d) => d.y)/10)*10])
                     .range([chart.getBodyHeight(), 0])
     
-    /* 渲染数据点 */
+    /* ----------------------------渲染数据点------------------------  */
     chart.renderPoints = function(){
         let points = chart.body().selectAll('.point')
                     .data(data);
@@ -40,18 +42,18 @@ d3.csv('./data.csv', function(d){
                     .append('circle')
                     .classed('point', true)
                 .merge(points)
-                    .attr('cx', (d) => chart.scaleX(d[0]))
-                    .attr('cy', (d) => chart.scaleY(d[1]))
+                    .attr('cx', (d) => chart.scaleX(d.x))
+                    .attr('cy', (d) => chart.scaleY(d.y))
                     .attr('r', 0)
                     .attr('fill', config.pointColor)
-                    .transition().duration(500)
+                    .transition().duration(config.animateDuration)
                     .attr('r', config.pointSize)
             
             points.exit()
                     .remove();
     }
 
-    /* 渲染坐标轴 */
+    /* ----------------------------渲染坐标轴------------------------  */
     chart.renderX = function(){
         chart.svg().insert('g','.body')
                 .attr('transform', 'translate(' + chart.bodyX() + ',' + (chart.bodyY() + chart.getBodyHeight()) + ')')
@@ -71,7 +73,7 @@ d3.csv('./data.csv', function(d){
         chart.renderY();
     }
 
-    /* 渲染文本标签 */
+    /* ----------------------------渲染文本标签------------------------  */
     chart.renderText = function(){
         d3.select('.xAxis').append('text')
                             .attr('class', 'axisText')
@@ -91,7 +93,7 @@ d3.csv('./data.csv', function(d){
                             .text('Y');
     }
 
-    /* 渲染网格线 */
+    /* ----------------------------渲染网格线------------------------  */
     chart.renderGrid = function(){
         d3.selectAll('.yAxis .tick')
             .each(function(d, i){
@@ -120,7 +122,7 @@ d3.csv('./data.csv', function(d){
             });
     }
 
-    /* 渲染标题 */
+    /* ----------------------------渲染图标题------------------------  */
     chart.renderTitle = function(){
         chart.svg().append('text')
                 .classed('title', true)
@@ -134,7 +136,7 @@ d3.csv('./data.csv', function(d){
 
     }
 
-    /* 绑定鼠标交互事件 */
+    /* ----------------------------绑定鼠标交互事件------------------------  */
     chart.addMouseOn = function(){
         //防抖函数
         function debounce(fn, time){
@@ -157,7 +159,7 @@ d3.csv('./data.csv', function(d){
                 e.target.style.cursor = 'hand'
 
                 d3.select(e.target)
-                    .attr('fill', chart._colors(1));
+                    .attr('fill', config.hoverColor);
                 
                 chart.svg()
                     .append('text')
@@ -165,7 +167,7 @@ d3.csv('./data.csv', function(d){
                     .attr('x', position[0]+5)
                     .attr('y', position[1])
                     .attr('fill', config.textColor)
-                    .text('x: ' + d[0] + ', y: ' + d[1]);
+                    .text('x: ' + d.x + ', y: ' + d.y);
             })
             .on('mouseleave', function(){
                 const e = d3.event;
