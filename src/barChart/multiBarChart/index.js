@@ -12,12 +12,14 @@ d3.csv('./data.csv', function(d){
     /* 配置参数 */
     const chart = new Chart();
     const config = {
-        barPadding: 0.15,
+        barOuterPadding: 0.15,
+        barColor: chart._colors(0),
         margins: {top: 80, left: 80, bottom: 50, right: 80},
         textColor: 'black',
         gridColor: 'gray',
-        tickShowGrid: [60, 120, 180],
-        title: '堆叠直方图'
+        tickShowGrid: [20, 40, 60, 80, 100],
+        title: '多列直方图',
+        barInnerPadding: 2
     }
 
     chart.margins(config.margins);
@@ -26,50 +28,50 @@ d3.csv('./data.csv', function(d){
     chart.scaleX = d3.scaleBand()
                     .domain(data.map((d) => d.date))
                     .range([0, chart.getBodyWidth()])
-                    .padding(config.barPadding);
+                    .padding(config.barOuterPadding);
     
     chart.scaleY = d3.scaleLinear()
-                    .domain([0, d3.max(data.map((d) => d.food + d.transportation + d.education))])
+                    .domain([0, d3.max(data, (d) => d3.max([d.food, d.transportation, d.education]))])
                     .range([chart.getBodyHeight(), 0])
-    
-    chart.stack = d3.stack()
-                    .keys(['food', 'transportation', 'education'])
-                    .order(d3.stackOrderAscending)
-                    .offset(d3.stackOffsetNone);
     
     /* 渲染柱形 */
     chart.renderBars = function(){
+        //改变数据结构，方便渲染
+        const multiData = d3.zip.apply(this, data.map((d) => {
+            let item = [];
+            Object.keys(d).forEach((key) => {
+                if (key !== 'date'){
+                    item.push([d.date, d[key], key]);
+                }
+            });
+            return item;
+        }));
 
         let groups = chart.body().selectAll('.g')
-                        .data(chart.stack(data));
-                    
+                            .data(multiData);
         let bars = groups.enter()
-                    .append('g')
-                  .merge(groups)
-                    .attr('class', (d) => 'g ' + d.key)
-                    .attr('fill', (d,i) => chart._colors(i))
-                    .selectAll('.bar')
-                    .data((d)=>{
-                        return d.map((item) => {
-                            item.index = d.index;
-                            item.name = d.key;
-                            return item;
-                        });
-                    });
+                            .append('g')
+                         .merge(groups)
+                            .attr('class', (d) => 'g ' + d[0][2])
+                            .attr('fill', (d,i) => chart._colors(i))
+                            .selectAll('.bar')
+                            .data((d) => d);
             
             groups.exit()
                     .remove();
 
             bars.enter()
                     .append('rect')
-                    .attr('class', 'bar')
+                    .attr('class','bar')
                 .merge(bars)
-                    .attr('x', (d) => chart.scaleX(d.data.date))
-                    .attr('y', (d) => chart.scaleY(d[0]))
-                    .attr('width', chart.scaleX.bandwidth())
+                    .attr('x', (d) => {
+                        return chart.scaleX(d[0]) + chart.scaleX.bandwidth() / multiData.length * (data.columns.indexOf(d[2]) - 1);
+                    })
+                    .attr('y', chart.scaleY(0))
+                    .attr('width', chart.scaleX.bandwidth() / multiData.length - config.barInnerPadding * (multiData.length-1))
                     .attr('height', 0)
                     .transition().duration(500)
-                    .attr('height', (d) => chart.scaleY(d[0]) - chart.scaleY(d[1]))
+                    .attr('height', (d) => chart.getBodyHeight() - chart.scaleY(d[1]))
                     .attr('y', (d) => chart.scaleY(d[1]));
             
             bars.exit()
@@ -177,13 +179,13 @@ d3.csv('./data.csv', function(d){
                     .attr('x', position[0]+5)
                     .attr('y', position[1])
                     .attr('fill', config.textColor)
-                    .text( d.name + ':' + d.data.food + '元');
+                    .text( d[2] + ':' + d[1] + '元');
             })
             .on('mouseleave', function(d){
                 const e = d3.event;
                 
                 d3.select(e.target)
-                    .attr('fill', chart._colors(d.index));
+                    .attr('fill', chart._colors(data.columns.indexOf(d[2]) - 1));
                     
                 d3.select('.tip').remove();
             })

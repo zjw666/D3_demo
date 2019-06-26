@@ -20,6 +20,10 @@ npm start
         <h4 style="text-align:center">堆叠直方图</h4>
         <img src="./pic/barChart/stackedBarChart.png" width="300px" />
     </div>
+    <div style="display: inline-block;">
+        <h4 style="text-align:center">多列直方图</h4>
+        <img src="./pic/barChart/multiBarChart.png" width="300px" />
+    </div>
 </div>
 
 
