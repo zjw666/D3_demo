@@ -75,3 +75,11 @@ npm start
 </div>
 
 ***
+## 雷达图 (radarChart)
+
+<div>
+    <div style="display: inline-block;padding-right: 10px"">
+        <h4 style="text-align:center">基本雷达图</h4>
+        <img src="./pic/radarChart/basicRadarChart.png" width="300px" />
+    </div>
+</div>

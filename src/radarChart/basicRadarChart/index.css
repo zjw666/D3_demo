@@ -1,0 +1,18 @@
+.box{
+    margin: 10% auto;
+    width: 600px;
+    height: 400px;
+    background-color: #ddd;
+}
+
+.title{
+    font-size: 20px;
+}
+
+.label{
+    font-size: 13px;
+}
+
+.polygon{
+    fill-opacity: 0.8;
+}
