@@ -39,6 +39,10 @@ npm start
         <h4 style="text-align:center">多符号散点图</h4>
         <img src="./pic/scatterChart/multiSymbolChart.png" width="300px" />
     </div>
+    <div style="display: inline-block;padding-right: 10px"">
+        <h4 style="text-align:center">气泡图</h4>
+        <img src="./pic/scatterChart/bubbleChart.png" width="300px" />
+    </div>
 </div>
 
 
