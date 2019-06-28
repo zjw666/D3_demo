@@ -194,7 +194,7 @@ d3.csv('./data.csv', function(d){
             return newData;
         }
 
-        //计算多边形的顶点
+        //计算多边形的顶点并生成顶点圆圈
         function generatePolygons(d,index){
             const points = [];
             const anglePiece = Math.PI * 2 / d.length; 

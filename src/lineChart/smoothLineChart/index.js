@@ -1,4 +1,5 @@
 import Chart from "../../chart.js";
+import cardinalSpline from "./cardinalSpline.js";
 
 d3.csv('./data.csv', function(d){
     return {
@@ -15,7 +16,7 @@ d3.csv('./data.csv', function(d){
         gridColor: 'gray',
         ShowGridX: [],
         ShowGridY: [20, 40, 60, 80, 100, 120, 140, 160 ,180, 200, 220],
-        title: '折线图',
+        title: '曲线图',
         pointSize: 5,
         pointColor: 'white',
         hoverColor: 'red',
@@ -58,38 +59,36 @@ d3.csv('./data.csv', function(d){
             function lineTween(){
                 const generateLine = d3.line()
                                         .x((d) => d[0])
-                                        .y((d) => d[1]);
+                                        .y((d) => d[1])
+                                        .curve(d3.curveCardinal.tension(0.5));
 
-                const pointX = data.map((d) => chart.scaleX(d.date));
-                const pointY = data.map((d) => chart.scaleY(d.money));
+                const inputPoints = data.map((d) => ({x: chart.scaleX(d.date), y: chart.scaleY(d.money)}));
 
-                const interpolate = getInterpolate(pointX, pointY);                
+                const interpolate = getInterpolate(inputPoints);    //根据输入点集获取对应的插值函数            
                 
-                const ponits = []
+                const outputPonits = []
 
                 return function(t){
-                    ponits.push([interpolate.x(t), interpolate.y(t)]);
-                    return generateLine(ponits);
+                    outputPonits.push(interpolate(t));
+                    return generateLine(outputPonits);
                 }
             }
 
             //点插值
-            function getInterpolate(pointX, pointY){
+            function getInterpolate(points){
 
-                const domain = d3.range(0, 1, 1/(pointX.length-1));
+                const domain = d3.range(0, 1, 1/(points.length-1));
                 domain.push(1);
 
-                const interpolateX = d3.scaleLinear()
-                                        .domain(domain)
-                                        .range(pointX);
+                const carInterpolate = cardinalSpline(points, 0.5);
 
-                const interpolateY = d3.scaleLinear()
+                const scaleTtoX = d3.scaleLinear()   //时间t与x坐标的对应关系
                                         .domain(domain)
-                                        .range(pointY);
-                return {
-                    x: interpolateX,
-                    y: interpolateY
-                };
+                                        .range(points.map((item) => item.x));
+
+                return function(t){
+                    return carInterpolate(scaleTtoX(t));
+                }
 
             }
     }
@@ -220,7 +219,7 @@ d3.csv('./data.csv', function(d){
                 e.target.style.cursor = 'hand'
 
                 d3.select(e.target)
-                    .attr('fill', config.textColor);
+                    .attr('fill', config.hoverColor);
                 
                 chart.svg()
                     .append('text')

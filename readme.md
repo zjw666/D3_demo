@@ -58,6 +58,10 @@ npm start
         <h4 style="text-align:center">堆叠面积折线图</h4>
         <img src="./pic/lineChart/stackAreaChart.png" width="300px" />
     </div>
+    <div style="display: inline-block;padding-right: 10px"">
+        <h4 style="text-align:center">曲线图</h4>
+        <img src="./pic/lineChart/smoothLineChart.png" width="300px" />
+    </div>
 </div>
 
 ***
