@@ -52,8 +52,6 @@ d3.csv('./data.csv', function(d){
             
             lines.exit()
                     .remove();
-
-            lineTween();
             
             //中间帧函数
             function lineTween(){

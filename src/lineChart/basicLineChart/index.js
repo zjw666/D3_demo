@@ -51,8 +51,6 @@ d3.csv('./data.csv', function(d){
             
             lines.exit()
                     .remove();
-
-            lineTween();
             
             //中间帧函数
             function lineTween(){
@@ -65,7 +63,7 @@ d3.csv('./data.csv', function(d){
 
                 const interpolate = getInterpolate(pointX, pointY);                
                 
-                const ponits = []
+                const ponits = [];
 
                 return function(t){
                     ponits.push([interpolate.x(t), interpolate.y(t)]);
