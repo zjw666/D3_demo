@@ -1,0 +1,60 @@
+{
+    "name": "grandfather",
+    "children": [
+        {
+            "name": "father",
+            "children": [
+                {
+                    "name": "son",
+                    "children": [
+                        {"name": "grandson1", "house": 2},
+                        {"name": "grandson2", "house": 3},
+                        {"name": "grandson3", "house": 4}
+
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "mother1",
+            "children": [
+                {
+                    "name": "daughter1",
+                    "children": [
+                        {"name": "granddaughter1", "house": 4},
+                        {"name": "granddaughter2", "house": 2}
+                    ]
+                },
+                {
+                    "name": "daughter2",
+                    "children": [
+                        {"name": "granddaughter3", "house": 4}
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "mother2",
+            "children": [
+                {
+                    "name": "son1",
+                    "children": [
+                        {"name": "grandson4", "house": 6},
+                        {"name": "granddaughter4", "house": 1}
+                    ]
+                },
+                {
+                    
+                    "name": "son2",
+                    "children": [
+                        {"name": "granddaughter5", "house": 2},
+                        {"name": "grandson5", "house": 3},
+                        {"name": "granddaughter5", "house": 2}
+                    ]
+                    
+                }
+            ]
+        }
+
+    ]
+}
