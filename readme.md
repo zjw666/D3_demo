@@ -44,6 +44,7 @@ npm start
 ## 树图 (treeChart)
 
 <img src="./pic/treeChart/basicTreeChart.png" width="290px" />
+
 ***
 ## 封闭图 (enclosureChart)
 
