@@ -65,8 +65,18 @@ d3.csv('./data.csv', function(d){
                 
                 const ponits = [];
 
+                const interval = 1/(pointX.length-1);
+
+                let index = 0;
+
                 return function(t){
-                    ponits.push([interpolate.x(t), interpolate.y(t)]);
+                    if (t - interval > 0 && t % interval < Math.pow(10, -1.4)){  //保证线条一定经过数据点
+                        index = Math.floor(t / interval);
+                        ponits.push([pointX[index], pointY[index]]);
+                    }else{
+                        ponits.push([interpolate.x(t), interpolate.y(t)]);
+                    }
+                    
                     return generateLine(ponits);
                 }
             }
