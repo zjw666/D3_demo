@@ -41,8 +41,12 @@ npm start
 <img src="./pic/treeMapChart/basicTreeMap.png" width="290px" />
 
 ***
-## 树图 (treeMapChart)
+## 树图 (treeChart)
 
 <img src="./pic/treeChart/basicTreeChart.png" width="290px" />
+***
+## 封闭图 (enclosureChart)
+
+<img src="./pic/enclosureChart/basicEnclosure.png" width="290px" />
 
 
