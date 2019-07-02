@@ -36,8 +36,13 @@ npm start
 <img src="./pic/radarChart/basicRadarChart.png" width="290px" />
 
 ***
-## 矩形树状图
+## 矩形树状图 (treeMapChart)
 
 <img src="./pic/treeMapChart/basicTreeMap.png" width="290px" />
+
+***
+## 树图 (treeMapChart)
+
+<img src="./pic/treeChart/basicTreeChart.png" width="290px" />
 
 
