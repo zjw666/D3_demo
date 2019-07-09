@@ -50,4 +50,9 @@ npm start
 
 <img src="./pic/enclosureChart/basicEnclosure.png" width="290px" />
 
+***
+## 漏斗图 (funnelChart)
+
+<img src="./pic/funnelChart/basicFunnel.png" width="290px" />
+
 
