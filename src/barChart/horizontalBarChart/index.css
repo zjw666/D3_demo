@@ -1,0 +1,14 @@
+.box{
+    margin: 10% auto;
+    width: 600px;
+    height: 400px;
+    background-color: #ddd;
+}
+
+.axisText{
+    font-size: 15px;
+}
+
+.title{
+    font-size: 20px;
+}

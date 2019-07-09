@@ -12,7 +12,7 @@ npm start
 ## 直方图 (barChart)
 
 
-<img src="./pic/barChart/basicBarChart.png" width="290px" /><img src="./pic/barChart/stackedBarChart.png" width="290px" /><img src="./pic/barChart/multiBarChart.png" width="290px" />
+<img src="./pic/barChart/basicBarChart.png" width="290px" /><img src="./pic/barChart/stackedBarChart.png" width="290px" /><img src="./pic/barChart/multiBarChart.png" width="290px" /><img src="./pic/barChart/horizontalBarChart.png" width="290px" />
 
 
 ***
