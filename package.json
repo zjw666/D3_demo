@@ -19,5 +19,6 @@
   "homepage": "https://github.com/zjw666/D3_demo#readme",
   "dependencies": {
     "http-server": "^0.11.1"
-  }
+  },
+  "devDependencies": {}
 }

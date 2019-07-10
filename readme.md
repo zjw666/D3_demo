@@ -55,4 +55,9 @@ npm start
 
 <img src="./pic/funnelChart/basicFunnel.png" width="290px" />
 
+***
+## 地图 (map)
+
+<img src="./pic/map/china.png" width="290px" />
+
 

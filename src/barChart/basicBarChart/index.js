@@ -99,7 +99,7 @@ d3.csv('./data.csv', function(d){
     /* ----------------------------渲染网格线------------------------  */
     chart.renderGrid = function(){
         d3.selectAll('.yAxis .tick')
-            .each(function(d, i){
+            .each(function(d){
                 if (config.tickShowGrid.indexOf(d) > -1){
                     d3.select(this).append('line')
                         .attr('class','grid')
