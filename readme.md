@@ -60,4 +60,9 @@ npm start
 
 <img src="./pic/map/china.png" width="290px" />
 
+***
+## 力图 (force)
+
+<img src="./pic/force/movingPoint.png" width="290px" />
+
 
