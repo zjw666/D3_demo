@@ -63,6 +63,6 @@ npm start
 ***
 ## 力图 (force)
 
-<img src="./pic/force/movingPoint.png" width="290px" />
+<img src="./pic/force/movingPoint.png" width="290px" /><img src="./pic/force/colorfulBubbles.png" width="290px" />
 
 
