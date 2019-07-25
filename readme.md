@@ -65,4 +65,9 @@ npm start
 
 <img src="./pic/force/movingPoint.png" width="290px" /><img src="./pic/force/colorfulBubbles.png" width="290px" /><img src="./pic/force/forceLayout.png" width="290px" />
 
+***
+## 河流图 (riverChart)
+
+<img src="./pic/riverChart/basicRiver.png" width="290px" />
+
 

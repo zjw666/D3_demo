@@ -75,7 +75,7 @@ chart.renderLinks = function(){
                                 .data(links);
 
           lines.enter()
-                 .append('line')
+                 .insert('line', 'circle')
                  .attr('stroke', config.lineColor)
                  .attr('stroke-width', config.lineWidth);
 
