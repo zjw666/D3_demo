@@ -70,4 +70,9 @@ npm start
 
 <img src="./pic/riverChart/basicRiver.png" width="290px" />
 
+***
+## 桑基图 (sanKeyChart)
+
+<img src="./pic/sanKeyChart/basicSanKey.png" width="290px" />
+
 
