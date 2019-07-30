@@ -75,4 +75,9 @@ npm start
 
 <img src="./pic/sanKeyChart/basicSanKey.png" width="290px" />
 
+***
+## 仪表图 (gauge)
+
+<img src="./pic/gauge/basicGauge.png" width="290px" />
+
 
