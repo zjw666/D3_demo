@@ -80,4 +80,9 @@ npm start
 
 <img src="./pic/gauge/basicGauge.png" width="290px" />
 
+***
+## 旭日图 (sunburst)
+
+<img src="./pic/sunburst/basicSunburst.png" width="290px" />
+
 

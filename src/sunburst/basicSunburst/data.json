@@ -1,0 +1,151 @@
+{
+    "name": "alphabet",
+    "children": [
+        {
+            "name": "a",
+            "children": [
+                {
+                    "name": "a1",
+                    "children": [
+                        {"name": "a11", "house": 2},
+                        {
+                            "name": "a12",
+                            "children":[
+                                {
+                                    "name" : "a121",
+                                    "house" : 2
+                                },
+                                {
+                                    "name" : "a122",
+                                    "house" : 1
+                                }
+                            ]
+                        },
+                        {"name": "a13", "house": 4}
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "b",
+            "children": [
+                {
+                    "name": "b1",
+                    "children": [
+                        {
+                            "name": "b12",
+                            "children":[
+                                {
+                                    "name" : "b121",
+                                    "house" : 1
+                                },
+                                {
+                                    "name" : "b122",
+                                    "house" : 1
+                                }
+                            ]
+                        },
+                        {"name": "b12", "house": 2}
+                    ]
+                },
+                {
+                    "name": "b2",
+                    "children": [
+                        {
+                            "name": "b21",
+                            "children":[
+                                {
+                                    "name" : "b211",
+                                    "house" : 3
+                                }
+                            ]
+                        },
+                        {
+                            "name" : "b22",
+                            "house" : 2
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "c",
+            "children": [
+                {
+                    "name": "c1",
+                    "children": [
+                        {
+                            "name": "c22",
+                            "children":[
+                                {
+                                    "name" : "c221",
+                                    "children": [
+                                        {"name" : "c2211", "house" : 3}
+                                    ]
+                                },
+                                {"name" : "c222", "house" : 1}
+                            ]
+                        },
+                        {
+                            "name": "c22",
+                            "children":[
+                                {
+                                    "name" : "c221",
+                                    "children": [
+                                        {"name" : "c2211", "house" : 1}
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "c2",
+                    "children": [
+                        {"name": "c21", "house": 2},
+                        {
+                            "name": "c22",
+                            "children":[
+                                {
+                                    "name" : "c221",
+                                    "children": [
+                                        {"name" : "c2211", "house" : 4}
+                                    ]
+                                }
+                            ]
+                        },
+                        {"name": "c23", "house": 2}
+                    ]
+                },
+                {
+
+                    "name": "c3",
+                    "children": [
+                        {
+                            "name": "c22",
+                            "children":[
+                                {
+                                    "name" : "c221",
+                                    "children": [
+                                        {"name" : "c2211", "house" : 1},
+                                        {"name" : "c2212", "house" : 2}
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "c22",
+                            "children":[
+                                {
+                                    "name" : "c221",
+                                    "house" : 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+
+    ]
+}
