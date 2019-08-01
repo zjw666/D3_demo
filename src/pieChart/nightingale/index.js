@@ -11,9 +11,8 @@ d3.csv('./data.csv', function(d){
     const config = {
         margins: {top: 80, left: 80, bottom: 50, right: 80},
         textColor: 'black',
-        title: '饼图',
+        title: '南格丁尔图',
         innerRadius: 0,
-        outerRadius: 100,
         textOffsetH: 10,
         lineColor: 'black',
         animateDuration: 1000
@@ -25,6 +24,10 @@ d3.csv('./data.csv', function(d){
     chart.arcAngle = d3.pie()
                     .sort((d,i) => i)
                     .value((d) => d.money);
+
+    chart.scaleRadius = d3.scaleLinear()
+                            .domain([0, d3.max(data.map((d) => d.money))])
+                            .range([0, d3.min([chart.getBodyWidth(), chart.getBodyHeight()]) * 0.5])
 
     /* ----------------------------渲染扇形------------------------  */
     chart.renderSlices = function(){
@@ -45,22 +48,22 @@ d3.csv('./data.csv', function(d){
               slices.exit()
                         .remove();
 
-        const arc = d3.arc()
-                        .outerRadius(config.outerRadius)
-                        .innerRadius(config.innerRadius);
-
         function arcTween(d){
-            let currentArc = this._current;
+            let currentR = this._current;
 
-            if (!currentArc){
-                currentArc = {startAngle: 0, endAngle: 0};
+            if (!currentR){
+                currentR = 0
             }
 
-            const interpolate = d3.interpolate(currentArc, d);
-            this._current = interpolate(1);   //当饼图更新时，从当前角度过渡到新角度
+            const interpolate = d3.interpolate(currentR, chart.scaleRadius(d.value));
+            this._current = interpolate(1);   //当饼图更新时，从当前半径到新半径
 
             return function(t){
-                return arc(interpolate(t));
+                let arc = d3.arc()
+                        .outerRadius(interpolate(t))
+                        .innerRadius(config.innerRadius);
+
+                return arc(d);
             }
         }
     }
@@ -69,9 +72,6 @@ d3.csv('./data.csv', function(d){
     chart.renderText = function(){
 
         // ----渲染文本标签-----
-        const arc = d3.arc()
-                        .outerRadius(config.outerRadius * 2.5)
-                        .innerRadius(config.innerRadius);
 
         const scaleTextDx = d3.scaleLinear()
                                 .domain([0, Math.PI/2])
@@ -94,7 +94,7 @@ d3.csv('./data.csv', function(d){
                         .attr('dx', computeTextDx)
                         .transition().duration(0).delay(config.animateDuration)
                         .attr('transform', (d) => {
-                            return 'translate(' + arc.centroid(d) + ')'
+                            return 'translate(' + getArcCentorid(chart.scaleRadius(d.value)*2.5, d, true) + ')'
                         })
                         .text((d) => d.data.date+': '+d.data.money);
 
@@ -102,9 +102,6 @@ d3.csv('./data.csv', function(d){
                         .remove();
 
         // ----渲染标签连线-----
-        const arc1 = d3.arc()
-                        .outerRadius(config.outerRadius * 2)
-                        .innerRadius(config.innerRadius);
 
         const points = getLinePoints();
 
@@ -128,7 +125,7 @@ d3.csv('./data.csv', function(d){
                 lines.exit()
                         .remove();
 
-        function computeTextDx(d){                      //计算文本水平偏移
+        function computeTextDx(d){                  //计算文本水平偏移
             const middleAngle = (d.endAngle + d.startAngle)/2;
             let dx = ''
             if (middleAngle < Math.PI){
@@ -139,17 +136,27 @@ d3.csv('./data.csv', function(d){
             return dx;
         }
 
-        function getLinePoints(){                       //生成连线的点
+        function getLinePoints(){                  //生成连线的点
             return chart.arcAngle(data).map((d) =>{
+                const radius = chart.scaleRadius(d.value);
                 const line = [];
-                const tempPoint = arc.centroid(d);
+                const tempPoint = getArcCentorid(radius * 2.5, d, true);
                 const tempDx = computeTextDx(d);
                 const dx = tempDx > 0 ? tempDx - config.textOffsetH : tempDx + config.textOffsetH;
-                line.push(arc1.centroid(d));
+                line.push(getArcCentorid(radius, d));
                 line.push(tempPoint);
                 line.push([tempPoint[0] + dx, tempPoint[1]]);
                 return line;
             })
+        }
+
+        function getArcCentorid(outerRadius, d, averageLength){       //获取指定半径弧的中心点，并可以均一化长度
+            if (averageLength) outerRadius = Math.sqrt(outerRadius*300);
+
+            return d3.arc()
+                        .outerRadius(outerRadius)
+                        .innerRadius(config.innerRadius)
+                        .centroid(d);
         }
     }
 
@@ -168,28 +175,25 @@ d3.csv('./data.csv', function(d){
 
     /* ----------------------------绑定鼠标交互事件------------------------  */
     chart.addMouseOn = function(){
-
-        const arcLarger = d3.arc()
-                            .outerRadius(config.outerRadius * 1.1)
-                            .innerRadius(config.innerRadius);
-
-        const arcNormal = d3.arc()
-                            .outerRadius(config.outerRadius)
-                            .innerRadius(config.innerRadius);
-
         d3.selectAll('.arc')
             .on('mouseover', function(d){
                 const e = d3.event;
 
                 d3.select(e.target)
-                    .attr('d', arcLarger(d));
+                    .attr('d', generateArc(chart.scaleRadius(d.value)*1.1));
             })
             .on('mouseleave', function(d){
                 const e = d3.event;
 
                 d3.select(e.target)
-                    .attr('d', arcNormal(d));
-            })
+                    .attr('d', generateArc(chart.scaleRadius(d.value)));
+            });
+
+        function generateArc(outerRadius){
+            return d3.arc()
+                        .outerRadius(outerRadius)
+                        .innerRadius(config.innerRadius);
+        }
     }
 
     chart.render = function(){

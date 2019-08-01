@@ -28,7 +28,7 @@ npm start
 ***
 ## 饼图 (pieChart)
 
-<img src="./pic/pieChart/basicPieChart.png" width="290px" /><img src="./pic/pieChart/doughnutChart.png" width="290px" />
+<img src="./pic/pieChart/basicPieChart.png" width="290px" /><img src="./pic/pieChart/doughnutChart.png" width="290px" /><img src="./pic/pieChart/nightingale.png" width="290px" />
 
 ***
 ## 雷达图 (radarChart)
