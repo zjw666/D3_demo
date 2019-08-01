@@ -11,7 +11,7 @@ d3.csv('./data.csv', function(d){
     const config = {
         margins: {top: 80, left: 80, bottom: 50, right: 80},
         textColor: 'black',
-        title: '南格丁尔图',
+        title: '南丁格尔图',
         innerRadius: 0,
         textOffsetH: 10,
         lineColor: 'black',
