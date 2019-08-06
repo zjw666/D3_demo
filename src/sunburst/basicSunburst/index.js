@@ -14,10 +14,18 @@ d3.json('./data.json').then(function(data){
 
     chart.margins(config.margins);
 
+    /* ----------------------------数据转换------------------------  */
     chart._nodeId = 0;  //用于标识数据唯一性
 
-    /* ----------------------------数据转换------------------------  */
     data = addId(data);
+
+    function addId(d){     //给数据标识唯一性Id
+        d.id = ++ chart._nodeId;
+        if (d.children){
+            d.children.forEach((item) => addId(item))
+        }
+        return d;
+    }
 
     const root = d3.hierarchy(data)
                     .sum((d) => d.house)
@@ -32,14 +40,6 @@ d3.json('./data.json').then(function(data){
     partition(root);
 
     let nodes = root.descendants();
-
-    function addId(d){     //给数据标识唯一性Id
-        d.id = ++ chart._nodeId;
-        if (d.children){
-            d.children.forEach((item) => addId(item))
-        }
-        return d;
-    }
 
     /* ----------------------------尺度转换------------------------  */
 

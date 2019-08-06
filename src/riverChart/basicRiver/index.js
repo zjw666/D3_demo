@@ -17,9 +17,6 @@ d3.csv('./data.csv', function(d){
         textColor: 'black',
         gridColor: 'gray',
         title: '基础河流图',
-        pointSize: 5,
-        pointColor: 'white',
-        hoverColor: 'red',
         animateDuration: 1000
     }
 
@@ -28,8 +25,7 @@ d3.csv('./data.csv', function(d){
     /* ----------------------------尺度转换------------------------  */
     chart.scaleX = d3.scaleTime()
                     .domain([new Date(data[0].date), new Date(data[data.length-1].date)])
-                    .range([0, chart.getBodyWidth()])
-                    //.ticks(5);
+                    .range([0, chart.getBodyWidth()]);
 
     chart.scaleY = d3.scaleLinear()
                     .domain([0, (Math.floor((
