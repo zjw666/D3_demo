@@ -19,16 +19,16 @@ d3.json('./data.json').then(function(data){
 
     chart.margins(config.margins);
 
-    chart._nodeId = 0;  //用于标识数据唯一性
-    
     /* ----------------------------数据转换------------------------  */
+    chart._nodeId = 0;  //用于标识数据唯一性
+
     const root = d3.hierarchy(data);
 
     const generateTree = d3.tree()
                     .size([chart.getBodyHeight(), chart.getBodyWidth()*0.8]);
-    
+
     generateTree(root);
-    
+
     /* ----------------------------渲染节点------------------------  */
     chart.renderNode = function(){
 
@@ -48,7 +48,7 @@ d3.json('./data.json').then(function(data){
                                         if (d.parent && chart.first) return 'scale(0.01)' + 'translate(' + (chart.oldY + config.paddingLeft) + ',' + chart.oldX + ')';
                                         return 'scale(1)' + 'translate(' + (d.y + config.paddingLeft) + ',' + d.x + ')';
                                     })
-                      
+
               groupsEnter.append('circle')
                             .attr('r', config.pointSize)
                             .attr('cx', 0)
@@ -61,13 +61,13 @@ d3.json('./data.json').then(function(data){
                             .attr('transform', (d) => 'translate(' + (d.y + config.paddingLeft) + ',' + d.x + ')')
                             .select('circle')
                                 .attr('fill', (d) => d._children ? config.hoverColor : config.pointFill);
-            
-              groups.exit()   
+
+              groups.exit()
                         .attr('transform-origin', (d) => (chart.targetNode.y + config.paddingLeft) + ' ' + chart.targetNode.x)  //子树逐渐缩小到新位置
                         .transition().duration(config.animateDuration)
                         .attr('transform', 'scale(0.01)')
                         .remove();
-        
+
 
     }
 
@@ -97,7 +97,7 @@ d3.json('./data.json').then(function(data){
 
         const links = chart.body().selectAll('.link')
                                 .data(nodesExceptRoot, (d) => d.id || (d.id = ++chart._nodeId));
-        
+
               links.enter()
                      .insert('path', '.g')
                      .attr('class', 'link')
@@ -119,7 +119,7 @@ d3.json('./data.json').then(function(data){
                      .attr('transform', 'scale(1)')
                      .attr('fill', 'none')
                      .attr('stroke', config.lineStroke)
-              
+
               links.exit()
                      .attr('transform-origin', (d) => {    //连线逐渐缩小到新位置
                          return chart.targetNode.y + config.paddingLeft + ' ' + chart.targetNode.x;
@@ -127,14 +127,14 @@ d3.json('./data.json').then(function(data){
                      .transition().duration(config.animateDuration)
                      .attr('transform', 'scale(0.01)')
                      .remove();
-        
+
         function generatePath(node1, node2){
             const path = d3.path();
 
             path.moveTo(node1.y + config.paddingLeft, node1.x);
             path.bezierCurveTo(
-                                (node1.y + node2.y)/2 + config.paddingLeft, node1.x, 
-                                (node1.y + node2.y)/2 + config.paddingLeft, node2.x, 
+                                (node1.y + node2.y)/2 + config.paddingLeft, node1.x,
+                                (node1.y + node2.y)/2 + config.paddingLeft, node2.x,
                                 node2.y + config.paddingLeft, node2.x
                               );
             return path.toString();
@@ -183,7 +183,7 @@ d3.json('./data.json').then(function(data){
             chart.targetNode = d;  //被点击的节点
         }
     }
-        
+
     chart.render = function(){
 
         chart.renderTitle();
@@ -199,8 +199,8 @@ d3.json('./data.json').then(function(data){
     }
 
     chart.renderChart();
-    
-        
+
+
 });
 
 

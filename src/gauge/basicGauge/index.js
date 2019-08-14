@@ -17,7 +17,7 @@ const config = {
 
 chart.margins(config.margins);
 
-/* ----------------------------计算半径和角度------------------------  */
+/* ----------------------------计算半径-----------------------------  */
 
 const radius = d3.min([chart.getBodyWidth()*0.95, chart.getBodyHeight()*0.95])/2;
 

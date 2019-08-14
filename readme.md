@@ -85,4 +85,9 @@ npm start
 
 <img src="./pic/sunburst/basicSunburst.png" width="290px" />
 
+***
+## 盒须图 (boxplot)
+
+<img src="./pic/boxplot/basicBoxplot.png" width="290px" />
+
 

@@ -12,7 +12,7 @@ d3.json('./chinaTopo.json').then(function(data){
     }
 
     chart.margins(config.margins);
-    
+
     /* ----------------------------尺度转换------------------------  */
     const projection = d3.geoMercator()
                             .center([104, 38])
@@ -22,15 +22,15 @@ d3.json('./chinaTopo.json').then(function(data){
     /* ----------------------------准备数据------------------------  */
 
     const handleData = topojson.feature(data, data.objects['中国']).features;
-    
-    /* ----------------------------渲染柱形------------------------  */
+
+    /* ----------------------------渲染地图轮廓------------------------  */
     chart.renderMap = function(){
         const path = d3.geoPath()
                         .projection(projection);
 
         let map = chart.body().selectAll('path')
                                 .data(handleData);
-            
+
             map.enter()
                  .append('path')
                  .attr('class', (d) => 'provinces ' + d.properties.name)
@@ -99,7 +99,7 @@ d3.json('./chinaTopo.json').then(function(data){
 
                 d3.select(e.target)
                     .attr('fill', config.hoverColor);
-                
+
                 chart.svg()
                     .append('text')
                     .classed('tip', true)
@@ -110,10 +110,10 @@ d3.json('./chinaTopo.json').then(function(data){
             })
             .on('mouseleave', function(d,i){
                 const e = d3.event;
-                
+
                 d3.select(e.target)
                     .attr('fill', chart._colors(i%10));
-                    
+
                 d3.select('.tip').remove();
             })
             .on('mousemove', debounce(function(){
@@ -124,7 +124,7 @@ d3.json('./chinaTopo.json').then(function(data){
                 }, 6)
             );
     }
-        
+
     chart.render = function(){
 
         chart.renderTitle();
@@ -137,8 +137,8 @@ d3.json('./chinaTopo.json').then(function(data){
     }
 
     chart.renderChart();
-    
-        
+
+
 });
 
 
