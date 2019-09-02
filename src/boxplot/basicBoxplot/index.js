@@ -11,8 +11,7 @@ d3.json('./data.json').then(function(data){
         textColor: 'black',
         gridColor: 'gray',
         tickShowGrid: [200,400,600,800,1000],
-        title: '基础盒须图',
-        animateDuration: 1000
+        title: '基础盒须图'
     }
 
     chart.margins(config.margins);
