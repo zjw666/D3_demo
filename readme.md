@@ -90,4 +90,9 @@ npm start
 
 <img src="./pic/boxplot/basicBoxplot.png" width="290px" />
 
+***
+## 热力图 (heatMap)
+
+<img src="./pic/heatMap/calendar.png" width="290px" />
+
 
