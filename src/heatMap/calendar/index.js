@@ -7,7 +7,7 @@ d3.json('./data.json').then(function(data){
     const config = {
         margins: {top: 80, left: 50, bottom: 50, right: 50},
         textColor: 'black',
-        title: '日期热力图',
+        title: '日历热力图',
         hoverColor: 'red',
         startTime: '2018-01-01',
         endTime: '2018-05-31',
@@ -22,13 +22,13 @@ d3.json('./data.json').then(function(data){
 
     chart.margins(config.margins);
 
-    /* ----------------------------数据转换------------------------  */
+    /* ----------------------------初始化常量------------------------  */
     const startTime = new Date(config.startTime);
     const endTime = new Date(config.endTime);
     const widthOffset = config.cellWidth + config.cellPadding;
     const heightOffset = config.cellHeight + config.cellPadding;
 
-    /* ----------------------------尺度转换------------------------  */
+    /* ----------------------------颜色转换------------------------  */
     chart.scaleColor = d3.scaleLinear()
                             .domain([0, d3.max(Object.values(data))])
                             .range([config.cellColor1, config.cellColor2]);

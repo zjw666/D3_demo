@@ -7,7 +7,6 @@ const chart = new Chart();
 const config = {
     margins: {top: 80, left: 80, bottom: 50, right: 80},
     title: '力导向图',
-    animateDuration: 3000,
     lineColor: 'black',
     lineWidth: '1',
     pointSize: 8,

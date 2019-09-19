@@ -95,4 +95,9 @@ npm start
 
 <img src="./pic/heatMap/calendar.png" width="290px" />
 
+***
+## 关系图 (graph)
+
+<img src="./pic/graph/chord.png" width="290px" />
+
 
