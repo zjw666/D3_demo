@@ -9,8 +9,10 @@
                     "children": [
                         {"name": "a11", "value": 2},
                         {"name": "a12", "value": 3},
-                        {"name": "a13", "value": 4}
-
+                        {"name": "a13", "value": 4},
+                        {"name": "a14", "value": 5},
+                        {"name": "a15", "value": 5},
+                        {"name": "a16", "value": 7}
                     ]
                 }
             ]
@@ -22,13 +24,20 @@
                     "name": "b1",
                     "children": [
                         {"name": "b11", "value": 4},
-                        {"name": "b12", "value": 2}
+                        {"name": "b12", "value": 2},
+                        {"name": "b13", "value": 4},
+                        {"name": "b14", "value": 4},
+                        {"name": "b15", "value": 4},
+                        {"name": "b16", "value": 4}
                     ]
                 },
                 {
                     "name": "b2",
                     "children": [
-                        {"name": "b21", "value": 4}
+                        {"name": "b21", "value": 4},
+                        {"name": "b22", "value": 5},
+                        {"name": "b23", "value": 4},
+                        {"name": "b24", "value": 4}
                     ]
                 }
             ]
@@ -49,7 +58,13 @@
                     "children": [
                         {"name": "c21", "value": 2},
                         {"name": "c22", "value": 3},
-                        {"name": "c23", "value": 2}
+                        {"name": "c23", "value": 2},
+                        {"name": "c24", "value": 3},
+                        {"name": "c25", "value": 3},
+                        {"name": "c26", "value": 3},
+                        {"name": "c27", "value": 3},
+                        {"name": "c28", "value": 3},
+                        {"name": "c29", "value": 3}
                     ]
 
                 }

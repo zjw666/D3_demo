@@ -43,7 +43,7 @@ npm start
 ***
 ## 树图 (treeChart)
 
-<img src="./pic/treeChart/basicTreeChart.png" width="290px" />
+<img src="./pic/treeChart/basicTreeChart.png" width="290px" /><img src="./pic/treeChart/radialTree.png" width="290px" />
 
 ***
 ## 封闭图 (enclosureChart)
