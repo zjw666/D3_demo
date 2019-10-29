@@ -23,7 +23,7 @@ npm start
 ***
 ## 折线图 (lineChart)
 
-<img src="./pic/lineChart/basicLineChart.png" width="290px" /><img src="./pic/lineChart/stackAreaChart.png" width="290px" /><img src="./pic/lineChart/smoothLineChart.png" width="290px" />
+<img src="./pic/lineChart/basicLineChart.png" width="290px" /><img src="./pic/lineChart/stackAreaChart.png" width="290px" /><img src="./pic/lineChart/smoothLineChart.png" width="290px" /><img src="./pic/lineChart/parallelLineChart.png" width="290px" />
 
 ***
 ## 饼图 (pieChart)

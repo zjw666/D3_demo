@@ -30,8 +30,6 @@ d3.json('./data.json').then(function(data){
 
     generateTree(root);
 
-
-
     /* ----------------------------渲染节点------------------------  */
     chart.renderNode = function(){
         let nodes = d3.select('.groups');
@@ -115,7 +113,7 @@ d3.json('./data.json').then(function(data){
         const links = link
                         .selectAll('.link')
                         .data(root.links().map((item) => {
-                            item.id = item.source.id + '-' + item.target.id;
+                            item.id = item.source.id + '-' + item.target.id;   // 为链接添加id
                             return item;
                         }), (d) => d.id );
 
@@ -180,7 +178,7 @@ d3.json('./data.json').then(function(data){
             }
             chart.oldX = d.x;  //点击位置x坐标
             chart.oldY = d.y;  //点击位置y坐标
-            chart.targetNode = d;  //被点击的节点
+            chart.targetNode = d;  //被点击的节点，该节点的x和y坐标随后将被更新
         }
     }
 
