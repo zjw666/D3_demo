@@ -95,7 +95,7 @@ export default class Chart {
 
     bodyX(){
         return this._margins.left;
- 
+
     }
 
     bodyY(){

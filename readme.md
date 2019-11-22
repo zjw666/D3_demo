@@ -93,7 +93,7 @@ npm start
 ***
 ## 热力图 (heatMap)
 
-<img src="./pic/heatMap/calendar.png" width="290px" />
+<img src="./pic/heatMap/calendar.png" width="290px" /><img src="./pic/heatMap/heatMap.png" width="290px" />
 
 ***
 ## 关系图 (graph)
