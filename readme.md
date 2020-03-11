@@ -48,7 +48,7 @@ npm start
 ***
 ## 封闭图 (enclosureChart)
 
-<img src="./pic/enclosureChart/basicEnclosure.png" width="290px" />
+<img src="./pic/enclosureChart/basicEnclosure.png" width="290px" /><img src="./pic/enclosureChart/zoomableEnclosure.png" width="290px" />
 
 ***
 ## 漏斗图 (funnelChart)
