@@ -38,7 +38,7 @@ npm start
 ***
 ## 矩形树状图 (treeMapChart)
 
-<img src="./pic/treeMapChart/basicTreeMap.png" width="290px" />
+<img src="./pic/treeMapChart/basicTreeMap.png" width="290px" /><img src="./pic/treeMapChart/zoomableTreeMap.png" width="290px" />
 
 ***
 ## 树图 (treeChart)

@@ -10,6 +10,7 @@ export default class Chart {
         this._box = null;
         this._svg = null;
         this._body = null;
+        this._padding = {top:10, left:10, right:10, bottom:10};
     }
 
     width(w){
@@ -76,17 +77,22 @@ export default class Chart {
         return height > 0 ? height : 0;
     }
 
+    padding(p){
+        if (arguments.length === 0) return this._padding;
+        this._padding = p;
+        return this;
+    }
+
     defineBodyClip(){
-        const padding = 10;
 
         this._svg.append('defs')
                  .append('clipPath')
                  .attr('id', 'clip')
                  .append('rect')
-                 .attr('width', this.getBodyWidth() + padding * 2)
-                 .attr('height', this.getBodyHeight() + padding * 2)
-                 .attr('x', -padding)
-                 .attr('y', -padding);
+                 .attr('width', this.getBodyWidth() + this._padding.left + this._padding.right)
+                 .attr('height', this.getBodyHeight() + this._padding.top  + this._padding.bottom)
+                 .attr('x', -this._padding.left)
+                 .attr('y', -this._padding.top);
     }
 
     render(){
