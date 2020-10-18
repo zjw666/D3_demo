@@ -7,7 +7,7 @@ npm start
 ```
 访问 `http://localhost:8888/`
 
-# 简单的D3图表示例
+# 简单的D3图表示例(整理不易，点个star，这次一定)
 
 ## 直方图 (barChart)
 
