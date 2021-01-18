@@ -1,4 +1,4 @@
-# 启动
+# 启动 how to use
 
 ```
 npm install
@@ -6,6 +6,8 @@ npm start
 
 ```
 访问 `http://localhost:8888/`
+
+# 文档 Doc https://blog.csdn.net/zjw_python/article/details/98182540
 
 # 简单的D3图表示例(整理不易，点个star，这次一定)
 
