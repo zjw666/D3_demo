@@ -3,6 +3,11 @@ const Path=require("path");
 const fs=require("fs");
 
 var server = http.createServer(function (req, res){
+    if (Path.normalize(decodeURI(req.url)) !== decodeURI(req.url)) {
+        res.statusCode = 403;
+        res.end();
+        return;
+    }
     let fileName=Path.resolve(__dirname,"."+req.url);
 
     if (req.url === '/'){
